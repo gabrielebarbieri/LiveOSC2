@@ -104,18 +104,18 @@ class LO2SessionComponent(SessionComponent, LO2Mixin):
         """ Gets a block of clip names
         """
         b = []
-        for i in range(msg[2], msg[2]+msg[3]):
+        for i in range(msg[3], msg[3]+msg[5]):
             if i < len(self._scenes):
-                s = self.scene[i]
-                for j in range(msg[4], msg[4]+msg[5]):
+                s = self.scene(i)
+                for j in range(msg[2], msg[2]+msg[4]):
                     if j < len(s._clip_slots):
-                        c = s.clip_slots(j)
-                        b.append(i, j, c.clip_name)
+                        c = s.clip_slot(j)
+                        b.append(str(c.clip_name))
                     else:
-                        b.append(i, j, '')
+                        b.append('')
             else:
-                b.append(i, j, '')
-        
+                b.append('')
+
         self.send('/live/clip/name/block', b)
 
     
