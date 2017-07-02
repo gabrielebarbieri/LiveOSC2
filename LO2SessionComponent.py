@@ -59,9 +59,7 @@ class LO2SessionComponent(SessionComponent, LO2Mixin):
     
     # Listeners
     def _lo2_on_scene_list_changed(self):
-        if len(self.song().scenes) != self._scenes_count:
-            self.send('/live/scenes', len(self.song().scenes))
-            self._scenes_count = len(self.song().scenes)
+        self.send('/live/scenes', len(self.song().scenes))
 
 
     def _lo2_on_selected_scene_changed(self):
