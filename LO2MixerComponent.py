@@ -59,10 +59,8 @@ class LO2MixerComponent(MixerComponent, LO2Mixin):
 
     # Callbacks
     def _lo2_on_track_list_changed(self):
-        if len(self.song().tracks) != self._track_count:
-            self.log_message('/live/tracks:' + str(len(self.song().tracks)))
-            self.send('/live/tracks', len(self.song().tracks))
-            self._track_count = len(self.song().tracks)
+        self._track_count = len(self.song().tracks)
+        self.send('/live/tracks', self._track_count)
 
 
     def _lo2_on_selected_track_changed(self):
