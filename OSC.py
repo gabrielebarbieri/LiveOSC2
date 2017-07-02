@@ -60,17 +60,18 @@ class OSCMessage:
         self.address  = address
         self.typetags = ","
         self.message  = ""
+        self.error = []
 
         if type(msg) in (str, int, float, bool, unicode):
            self.append(msg)
         elif type(msg) in (list,tuple):
              for m in msg:
                 if type(m) not in (str,int,float, bool, unicode):
-                    #log("don't know how to encode message element " + str(m) + " " + str(type(m)))
+                    self.error.append("don't know how to encode message element " + str(m) + " " + str(type(m)))
                     return
                 self.append(m)
         else:
-            #log("don't know how to encode message " + str(m) + " " + str(type(m)))
+            self.error.append ("don't know how to encode message " + str(m) + " " + str(type(m)))
             return
 
     def append(self, argument, typehint = None):

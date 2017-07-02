@@ -47,6 +47,9 @@ class LO2OSC(object):
 
     def send(self, address, msg):
         oscmsg = OSC.OSCMessage(address, msg)
+        if len(oscmsg.error) > 0:
+            self.log_message('OSCMessage Error: ' + ''.join(oscmsg.error))
+
         self._socket.sendto(oscmsg.getBinary(), self._remote_addr)
 
     def send_message(self, message):
