@@ -27,7 +27,19 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
     
         self.set_default('_track_id', '_scene_id')
     
-        callbacks = {'color': 'color', 'name': 'name', 'warping': 'warping', 'looping': 'looping', 'loopstart': 'loop_start', 'loopend': 'loop_end', 'start': 'start_marker', 'end': 'end_marker', 'loopjump': 'loop_jump'}
+        callbacks = {
+            'color': 'color',
+            'name': 'name',
+            'warping': 'warping',
+            'looping': 'looping',
+            'loopstart': 'loop_start',
+            'loopend': 'loop_end',
+            'start': 'start_marker',
+            'end': 'end_marker',
+            'loopjump': 'loop_jump',
+            'muted': 'muted'
+        }
+
         for n,p in callbacks.iteritems():
             self.add_simple_callback('/live/clip/'+n, '_clip_slot.clip', p, self._is_clip, getattr(self, '_on_clip_'+n+'_changed'))
     
@@ -50,6 +62,7 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
         self._on_clip_start_changed.subject = clip
         self._on_clip_end_changed.subject = clip
         self._on_clip_gain_changed.subject = clip
+        self._on_clip_muted_changed.subject = clip
     
     
     def _is_clip(self, msg):
@@ -174,6 +187,10 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
     @subject_slot('gain')
     def _on_clip_gain_changed(self):
         self.send_default('/live/clip/gain', self._clip_slot.clip.gain)
+
+    @subject_slot('muted')
+    def _on_clip_muted_changed(self):
+        self.send_default('/live/clip/muted', self._clip_slot.clip.muted)
     
 
 

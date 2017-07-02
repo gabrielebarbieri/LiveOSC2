@@ -206,6 +206,7 @@ Clips
 
 /live/clip/color (int track_id, int scene_id)
 
+/live/clip/muted (int track_id, int scene_id, int muted)
 
 /live/clip/looping (int track_id, int scene_id)  
 /live/clip/loopstart (int track_id, int scene_id)  
