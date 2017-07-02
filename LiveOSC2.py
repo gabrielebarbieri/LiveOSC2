@@ -27,6 +27,10 @@ class LiveOSC2(ControlSurface):
             self._session = LO2SessionComponent(1,1)
             self._session.set_mixer(self._mixer)
             self._transport = LO2TransportComponent()
+
+            self._mixin = LO2Mixin()
+            self._c_instance = c_instance
+            self._mixin.add_callback('/live/selection', self._live_selection)
             
             self.parse()
 
@@ -42,3 +46,7 @@ class LiveOSC2(ControlSurface):
     def parse(self):
         self.osc_handler.process()
         self.schedule_message(1, self.parse)
+
+
+    def _live_selection(self, msg, src):
+        self._c_instance.set_session_highlight(msg[2], msg[3], msg[4], msg[5], 0)
