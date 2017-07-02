@@ -208,6 +208,25 @@ Clips
 
 /live/clip/muted (int track_id, int scene_id, int muted)
 
+/live/clip/notes (int track_id, int scene_id, float start_time, int start_pitch, float time_length, int pitch_length)
+
+/live/clip/notes/add (int track_id, int scene_id, int pitch, float time, float duration, int velocity, int mute)
+```
+pitch is from 0 to 127
+time is in beats (0 is beat 1, 1 is beat 2, 0.5 is halfway between the two)
+duration is in beats (0.25 is a quarter beat, 0.5 half beat, 1 whole beat, ...)
+velocity is 0 127
+mutes is 0 or 1
+```
+
+Example adding multiple notes
+
+```
+/live/clip/notes/add 0 0 0 0 0.5 100 0 12 0 0.5 100 0 24 0 0.5 100 0
+```
+
+/live/clip/notes/remove (int track_id, int scene_id, float start_time, int start_pitch, float time_length, int pitch_length)
+
 /live/clip/looping (int track_id, int scene_id)  
 /live/clip/loopstart (int track_id, int scene_id)  
 /live/clip/loopend (int track_id, int scene_id)  

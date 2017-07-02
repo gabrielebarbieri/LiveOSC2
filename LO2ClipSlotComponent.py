@@ -47,6 +47,9 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
         self.add_callback('/live/clip/stop', self._stop)
         self.add_callback('/live/clip/pitch', self._pitch)
         self.add_callback('/live/clip/select', self._view)
+        self.add_callback('/live/clip/notes', self._notes)
+        self.add_callback('/live/clip/notes/add', self._notes_add)
+        self.add_callback('/live/clip/notes/remove', self._notes_remove)
 
 
 
@@ -230,5 +233,48 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
             if 0:
                 self.song().view.selected_track = self._clip_slot.canonical_parent
                 self.song().view.selected_scene = self.song().scenes[self._scene_id]
+
+
+    def _notes(self, msg, src):
+        if self._is_clip(msg):
+            c = self._clip_slot.clip
+
+            if c.is_midi_clip and len(msg) == 8:
+                notes = c.get_notes(msg[4], msg[5], msg[6], msg[7])
+                data = []
+                data.append(self._track_id)
+                data.append(self._scene_id)
+
+                for n in notes:
+                    for p in n:
+                        data.append(p)
+                self.send('/live/clip/notes', data)
+
+
+    def _notes_add(self, msg, src):
+        if self._is_clip(msg):
+            c = self._clip_slot.clip
+            if c.is_midi_clip and len(msg) >= 9:
+                param_count = len(msg) - 4
+                if param_count % 5 != 0:
+                    return # bad param count/format
+
+                note_count = param_count / 5
+
+                notes_to_add = []
+                for x in range(note_count):
+                    notes_to_add.append(
+                            (msg[x * 5 + 4], msg[x * 5 + 5], msg[x * 5 + 6], msg[x * 5 + 7], msg[x * 5 + 8])
+                        )
+
+                c.set_notes(tuple(notes_to_add))
+
+
+    def _notes_remove(self, msg, src):
+        if self._is_clip(msg):
+            c = self._clip_slot.clip
+            if c.is_midi_clip and len(msg) == 8:
+                c.remove_notes(msg[4], msg[5], msg[6], msg[7])
+
 
 
