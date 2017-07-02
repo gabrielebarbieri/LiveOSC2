@@ -192,6 +192,8 @@ Clips
 
 /live/clip/state (int track_id, int scene_id)
 
+/live/clip/state/block (int track_id, int scene_id, int width, int height)
+
 /live/clip/play (int track_id, int scene_id)
 
 /live/clip/stop (int track_id, int scene_id)

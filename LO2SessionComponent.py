@@ -3,6 +3,7 @@ from _Framework.SceneComponent import SceneComponent
 
 from LO2SceneComponent import LO2SceneComponent
 from LO2Mixin import LO2Mixin, wrap_init
+from LO2ClipSlotComponent import LO2ClipSlotComponent
 
 class LO2SessionComponent(SessionComponent, LO2Mixin):
 
@@ -22,6 +23,7 @@ class LO2SessionComponent(SessionComponent, LO2Mixin):
         
         self.add_callback('/live/scene/name/block', self._scene_name_block)
         self.add_callback('/live/clip/name/block', self._clip_name_block)
+        self.add_callback('/live/clip/state/block', self._clip_state_block)
 
         self.add_function_callback('/live/scenes', self._lo2_on_scene_list_changed)
 
@@ -116,5 +118,25 @@ class LO2SessionComponent(SessionComponent, LO2Mixin):
 
         self.send('/live/clip/name/block', b)
 
-    
-    
+
+
+    def _clip_state_block(self, msg, src):
+        """ Gets a block of clip states
+        """
+        b = []
+            
+        for i in range(msg[3], msg[3]+msg[5]):
+            if i < len(self._scenes):
+                s = self.scene(i)
+                for j in range(msg[2], msg[2]+msg[4]):
+                    if j < len(s._clip_slots):
+                        c = s.clip_slot(j)
+                        b.append(LO2ClipSlotComponent.compute_state(c._clip_slot))
+                    else:
+                        b.append(-1)
+            else:
+                b.append(-1)
+
+        self.send('/live/clip/state/block', b)
+
+
