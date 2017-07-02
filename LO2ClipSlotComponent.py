@@ -21,7 +21,7 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
     def __init__(self, tid, sid, *a, **k):
         self._track_id = tid
         self._scene_id = sid
-        
+        self._has_clip = 0
         
         super(LO2ClipSlotComponent, self).__init__(*a, **k)
     
@@ -107,11 +107,13 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
     def _send_state(self):
         if self._scene_id == -1:
             return
-        
+
         state = int(self._clip_slot.has_clip) if self._clip_slot is not None else 0
-        
+        name = ''
+
         if self._clip_slot.has_clip:
             c = self._clip_slot.clip
+            name = c.name
             if c.is_playing:
                 state = 2
             if c.is_triggered:
@@ -119,6 +121,9 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
         
         self.send('/live/clip/state', self._track_id, self._scene_id, state)
 
+        if self._clip_slot.has_clip != self._has_clip:
+            self._has_clip = self._clip_slot.has_clip
+            self.send_default('/live/clip/name', name)
     
     
     def _lo2__on_clip_color_changed(self):
