@@ -61,6 +61,8 @@ set / delete cue
 /live/play/select  
     Starts playing the current selection in arrangement view  
 
+/live/jump (float beats)
+    Instantly jumps ahead n beats
 
 /live/undo  
 /live/redo  

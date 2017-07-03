@@ -22,6 +22,8 @@ class LO2TransportComponent(TransportComponent, LO2Mixin):
     
         self.add_function_callback('/live/cue/next', s.jump_to_next_cue)
         self.add_function_callback('/live/cue/prev', s.jump_to_prev_cue)
+
+        self.add_callback('/live/jump', self._jump)
         
         self.add_function_callback('/live/play', s.start_playing)
         self.add_function_callback('/live/play/continue', s.continue_playing)
@@ -124,3 +126,9 @@ class LO2TransportComponent(TransportComponent, LO2Mixin):
                     c = tr.clip_slots[msg[3]]
                     if c.has_clip:
                         c.delete_clip(msg[4])
+
+    def _jump(self, msg, src):
+        if len(msg) == 3:
+            self.song().jump_by(msg[2])
+
+
