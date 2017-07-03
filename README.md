@@ -50,6 +50,12 @@ groove
 cue points
 set / delete cue
 
+/live/cue
+    Gets all the cue points in the song, sorted by time in the format (float beat_time, string name)
+
+/live/cue/jump (string name)
+    Jumps to the first occurrence of a cue point with the provided name
+
 /live/cue/next  
 /live/cue/prev  
     Jumps to the next and previous cue points in arrangement view
