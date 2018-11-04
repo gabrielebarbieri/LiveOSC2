@@ -252,8 +252,8 @@ warping mode
 gain
 
 
-
-
 Browser
 -------
+
+/live/browser/load (string name)  
 

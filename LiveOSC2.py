@@ -4,6 +4,7 @@ from _Framework.ControlSurface import ControlSurface
 from LO2SessionComponent import LO2SessionComponent
 from LO2MixerComponent import LO2MixerComponent
 from LO2TransportComponent import LO2TransportComponent
+from LO2BrowserComponent import LO2BrowserComponent
 
 from LO2Mixin import LO2Mixin
 from LO2OSC import LO2OSC
@@ -27,6 +28,7 @@ class LiveOSC2(ControlSurface):
             self._session = LO2SessionComponent(1,1)
             self._session.set_mixer(self._mixer)
             self._transport = LO2TransportComponent()
+            self._filebrowser = LO2BrowserComponent()
 
             self._mixin = LO2Mixin()
             self._c_instance = c_instance
