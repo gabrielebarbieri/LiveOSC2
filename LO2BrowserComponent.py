@@ -14,10 +14,25 @@ class LO2BrowserComponent(ControlSurfaceComponent, LO2Mixin):
         self.tracks = self.song.visible_tracks
         self.browser = self.application().browser
 
-        self.add_callback('/live/browser/load', self.browser_load)
+        self.add_callback('/live/browser/drums/load', self.browser_drums_load)
+        self.add_callback('/live/browser/instruments/load', self.browser_not_implemented)
+        self.add_callback('/live/browser/audiofx/load', self.browser_not_implemented)
+        self.add_callback('/live/browser/midifx/load', self.browser_not_implemented)
+        self.add_callback('/live/browser/m4l/load', self.browser_not_implemented)
+        self.add_callback('/live/browser/plugins/load', self.browser_not_implemented)
+        self.add_callback('/live/browser/clips/load', self.browser_not_implemented)
+        self.add_callback('/live/browser/samples/load', self.browser_not_implemented)
+        self.add_callback('/live/browser/sounds/load', self.browser_not_implemented)
+        self.add_callback('/live/browser/packs/load', self.browser_not_implemented)
+        self.add_callback('/live/browser/userlib/load', self.browser_not_implemented)
+        self.add_callback('/live/browser/currentprj/load', self.browser_not_implemented)
+        self.add_callback('/live/browser/userfolders/load', self.browser_not_implemented)
+
+    def browser_not_implemented(self):
+        self.show_message("call not implemented!")
 
     # Ableton Callbacks
-    def _browser_list_drum(self):
+    def _browser_drums_list(self):
         drum_kits = filter(lambda k:
                            k.is_loadable,
                            [k for k in self.browser.drums.children])
@@ -26,7 +41,7 @@ class LO2BrowserComponent(ControlSurfaceComponent, LO2Mixin):
         return drum_kits
 
     def _find_drum_by_name(self, name):
-        drum_kits = self._browser_list_drum()
+        drum_kits = self._browser_drums_list()
         kit = filter(lambda k: k.name == name, drum_kits)
         if len(kit) > 0:
             kit = kit[0]
@@ -35,14 +50,11 @@ class LO2BrowserComponent(ControlSurfaceComponent, LO2Mixin):
 
         return kit
 
-    def _browser_load_item(self, name):
-        kit = self._find_drum_by_name(name)
-        self.browser.load_item(kit)
-
-    def _list_tracks(self):
-        self.log_message(self.tracks)
+    def _browser_load_item(self, item):
+        self.browser.load_item(item)
 
     # Callbacks
-    def browser_load(self, msg, src):
+    def browser_drums_load(self, msg, src):
         path, type_tag, name = msg
-        self._browser_load_item(name)
+        kit = self._find_drum_by_name(name)
+        self._browser_load_item(kit)
