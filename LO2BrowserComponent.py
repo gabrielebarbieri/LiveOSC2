@@ -15,18 +15,18 @@ class LO2BrowserComponent(ControlSurfaceComponent, LO2Mixin):
         self.browser = self.application().browser
 
         self.add_callback('/live/browser/drums/load', self.browser_drums_load)
-        self.add_callback('/live/browser/instruments/load', self._browser_not_implemented)
-        self.add_callback('/live/browser/audiofx/load', self._browser_not_implemented)
-        self.add_callback('/live/browser/midifx/load', self._browser_not_implemented)
-        self.add_callback('/live/browser/m4l/load', self._browser_not_implemented)
-        self.add_callback('/live/browser/plugins/load', self._browser_not_implemented)
-        self.add_callback('/live/browser/clips/load', self._browser_not_implemented)
-        self.add_callback('/live/browser/samples/load', self._browser_not_implemented)
-        self.add_callback('/live/browser/sounds/load', self._browser_not_implemented)
-        self.add_callback('/live/browser/packs/load', self._browser_not_implemented)
-        self.add_callback('/live/browser/userlib/load', self._browser_not_implemented)
-        self.add_callback('/live/browser/currentprj/load', self._browser_not_implemented)
-        self.add_callback('/live/browser/userfolders/load', self._browser_not_implemented)
+        self.add_callback('/live/browser/instruments/load', self.browser_instruments_load)
+        self.add_callback('/live/browser/audiofx/load', self.browser_audiofx_load)
+        self.add_callback('/live/browser/midifx/load', self.browser_midifx_load)
+        self.add_callback('/live/browser/m4l/load', self.browser_m4l_load)
+        self.add_callback('/live/browser/plugins/load', self.browser_plugins_load)
+        self.add_callback('/live/browser/clips/load', self.browser_clips_load)
+        self.add_callback('/live/browser/samples/load', self.browser_samples_load)
+        self.add_callback('/live/browser/sounds/load', self.browser_sounds_load)
+        self.add_callback('/live/browser/packs/load', self.browser_packs_load)
+        self.add_callback('/live/browser/userlib/load', self.browser_userlib_load)
+        self.add_callback('/live/browser/currentprj/load', self.browser_currentprj_load)
+        self.add_callback('/live/browser/userfolders/load', self.browser_userfolders_load)
 
 
     def _recursive_browse(self, item):
@@ -108,11 +108,59 @@ class LO2BrowserComponent(ControlSurfaceComponent, LO2Mixin):
 
         return item
 
-    def _browser_load_item(self, item):
+    def _browser_load_item(self, category, name):
+        item = self._find_item_by_name(category, name)
         self.browser.load_item(item)
 
     # Callbacks
     def browser_drums_load(self, msg, src):
         path, type_tag, name = msg
-        kit = self._find_item_by_name('drums', name)
-        self._browser_load_item(kit)
+        self._browser_load_item('drums', name)
+
+    def browser_instruments_load(self, msg, src):
+        path, type_tag, name = msg
+        self._browser_load_item('instruments', name)
+
+    def browser_audiofx_load(self, msg, src):
+        path, type_tag, name = msg
+        self._browser_load_item('audiofx', name)
+
+    def browser_midifx_load(self, msg, src):
+        path, type_tag, name = msg
+        self._browser_load_item('midifx', name)
+
+    def browser_m4l_load(self, msg, src):
+        path, type_tag, name = msg
+        self._browser_load_item('m4l', name)
+
+    def browser_plugins_load(self, msg, src):
+        path, type_tag, name = msg
+        self._browser_load_item('plugins', name)
+
+    def browser_clips_load(self, msg, src):
+        path, type_tag, name = msg
+        self._browser_load_item('clips', name)
+
+    def browser_samples_load(self, msg, src):
+        path, type_tag, name = msg
+        self._browser_load_item('samples', name)
+
+    def browser_sounds_load(self, msg, src):
+        path, type_tag, name = msg
+        self._browser_load_item('sounds', name)
+
+    def browser_packs_load(self, msg, src):
+        path, type_tag, name = msg
+        self._browser_load_item('packs', name)
+
+    def browser_userlib_load(self, msg, src):
+        path, type_tag, name = msg
+        self._browser_load_item('userlib', name)
+
+    def browser_currentprj_load(self, msg, src):
+        path, type_tag, name = msg
+        self._browser_load_item('currentprj', name)
+
+    def browser_userfolders_load(self, msg, src):
+        path, type_tag, name = msg
+        self._browser_load_item('userfolders', name)

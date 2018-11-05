@@ -255,5 +255,16 @@ gain
 Browser
 -------
 
-/live/browser/load (string name)  
-
+/live/browser/drums/load (string name)  
+/live/browser/instruments/load (string name)  
+/live/browser/audiofx/load (string name)  
+/live/browser/midifx/load (string name)  
+/live/browser/m4l/load (string name)  
+/live/browser/plugins/load (string name)  
+/live/browser/clips/load (string name)  
+/live/browser/samples/load (string name)  
+/live/browser/sounds/load (string name)  
+/live/browser/packs/load (string name)  
+/live/browser/userlib/load (string name)  
+/live/browser/currentprj/load (string name)  
+/live/browser/userfolders/load' (string name)  
