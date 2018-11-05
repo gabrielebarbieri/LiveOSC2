@@ -38,6 +38,7 @@ class LO2ChannelStripComponent(ChannelStripComponent, LO2Mixin):
             self.add_simple_callback('/live/'+ty+'/name', '_track', 'name', self._is_track, getattr(self, '_on_track_name_changed'))
             self.add_simple_callback('/live/'+ty+'/color', '_track', 'color', self._is_track, getattr(self, '_on_track_color_changed'))
                     
+        self.add_callback('/live/track/send', self._track_sends_update)
         self.add_callback('/live/track/state', self._track_state)
         
         for ty in self._track_types:
@@ -248,6 +249,9 @@ class LO2ChannelStripComponent(ChannelStripComponent, LO2Mixin):
         if self._is_track(msg):
             self._on_track_state_changed()
 
+    def _track_sends_update(self, msg, src):
+        path, type_tag, track_id, send_id, value = msg
+        self.song().visible_tracks[track_id].mixer_device.sends[send_id].value = value
 
     def _view(self, msg, src):
         if self._is_track(msg) and self._track is not None:
