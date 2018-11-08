@@ -257,6 +257,9 @@ gain
 Browser
 -------
 
+/live/browser/list ([string name])  
+Gets all categories. If a name is provided, gets all items under that category.  
+  
 /live/browser/drums/load (string name)  
 /live/browser/instruments/load (string name)  
 /live/browser/audiofx/load (string name)  

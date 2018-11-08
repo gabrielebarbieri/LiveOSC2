@@ -28,13 +28,16 @@ class LO2BrowserComponent(ControlSurfaceComponent, LO2Mixin):
         self.add_callback('/live/browser/currentprj/load', self.browser_currentprj_load)
         self.add_callback('/live/browser/userfolders/load', self.browser_userfolders_load)
 
+        self.add_callback('/live/browser/list', self.browser_list)
+
 
     def _recursive_browse(self, item):
         item_list = []
         if hasattr(item, 'children'):
             for it in item.children:
-                item_list += [it]
-                item_list += self._recursive_browse(it)
+                if it.is_loadable and not it.is_folder:
+                    item_list += [it]
+                    item_list += self._recursive_browse(it)
 
         return item_list
 
@@ -84,7 +87,7 @@ class LO2BrowserComponent(ControlSurfaceComponent, LO2Mixin):
     def _browser_userfolders_list(self):
         return self._browser_category_list(self.browser.user_folders)
 
-    def _find_item_by_name(self, category, name):
+    def _find_items_by_category(self, category):
         categories = {
             'drums': self._browser_drums_list,
             'instruments': self._browser_instruments_list,
@@ -100,9 +103,17 @@ class LO2BrowserComponent(ControlSurfaceComponent, LO2Mixin):
             'currentprj': self._browser_currentprj_list,
             'userfolders': self._browser_userfolders_list,
         }
-        item = None
+
         if category in categories.keys():
-            item = filter(lambda i: i.name == name, categories.get(category)())
+            return categories.get(category)()
+        else:
+            return categories.keys()
+
+    def _find_item_by_name(self, category, name):
+        item = None
+        item_list = self._find_items_by_category(category)
+        if item_list:
+            item = filter(lambda i: i.name == name, item_list)
             if len(item):
                 item = item[0]
 
@@ -113,6 +124,18 @@ class LO2BrowserComponent(ControlSurfaceComponent, LO2Mixin):
         self.browser.load_item(item)
 
     # Callbacks
+    def browser_list(self, msg, src):
+        if len(msg) == 3:
+            path, type_tag, category = msg
+        else:
+            path, type_tag = msg
+            category = None
+
+        item_list = self._find_items_by_category(category)
+        item_list = list(map(lambda i: i if isinstance(i, str) else i.name, item_list))
+
+        self.send('/live/browser/list', item_list)
+
     def browser_drums_load(self, msg, src):
         path, type_tag, name = msg
         self._browser_load_item('drums', name)
