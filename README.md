@@ -192,6 +192,8 @@ Devices
 /live/return/device/select  
 /live/master/device/select  
 
+/live/track/monitoring (int track_id, state)  
+in = 0, auto = 1, off = 2  
 
 
 
