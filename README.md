@@ -166,6 +166,10 @@ Tracks
 /live/track/state (int track_id, [int state])  
 
 
+/live/track/monitoring (int track_id, state)  
+    Sets the Monitor status  
+    in = 0, auto = 1, off = 2  
+
 collapse
 
 routing
@@ -191,10 +195,6 @@ Devices
 /live/track/device/select  
 /live/return/device/select  
 /live/master/device/select  
-
-/live/track/monitoring (int track_id, state)  
-in = 0, auto = 1, off = 2  
-
 
 
 Clips
