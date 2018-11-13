@@ -28,7 +28,7 @@ class LO2OSC(object):
 
         self._local_addr = (localhost, localport)
         self._remote_addr = (remotehost, remoteport)
-        
+
         try:
             self._socket.bind(self._local_addr)
             self.log_message('Starting on: ' + str(self._local_addr) + ', remote addr: '+ str(self._remote_addr))
@@ -54,8 +54,8 @@ class LO2OSC(object):
 
     def send_message(self, message):
         self._socket.sendto(message.getBinary(), self._remote_addr)
-    
-    
+
+
     def process(self):
         try:
             while 1:
@@ -99,4 +99,4 @@ class LO2OSC(object):
         port = msg[3]
         self.log_message('LiveOSC2: reconfigured to send to ' + host + ':' + str(port))
         self._remote_addr = (host, port)
-        
+

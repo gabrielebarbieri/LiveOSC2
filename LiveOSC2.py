@@ -15,15 +15,15 @@ class LiveOSC2(ControlSurface):
 
     def __init__(self, c_instance):
         super(LiveOSC2, self).__init__(c_instance)
-        
+
         with self.component_guard():
             LO2OSC.set_log(self.log_message)
             LO2OSC.set_message(self.show_message)
             self.osc_handler = LO2OSC()
-            
+
             LO2Mixin.set_osc_handler(self.osc_handler)
             LO2Mixin.set_log(self.log_message)
-            
+
             self._mixer = LO2MixerComponent(1)
             self._session = LO2SessionComponent(1,1)
             self._session.set_mixer(self._mixer)
@@ -33,7 +33,7 @@ class LiveOSC2(ControlSurface):
             self._mixin = LO2Mixin()
             self._c_instance = c_instance
             self._mixin.add_callback('/live/selection', self._live_selection)
-            
+
             self.parse()
 
             if not self.osc_handler.error():

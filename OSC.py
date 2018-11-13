@@ -17,7 +17,7 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# For questions regarding this module contact 
+# For questions regarding this module contact
 # Daniel Holth <dholth@stetson.edu> or visit
 # http://www.stetson.edu/~ProctoLogic/
 #
@@ -148,8 +148,8 @@ def readString(data):
     return (data[0:length], data[nextData:])
 
 def readBlob(data):
-    length   = struct.unpack(">i", data[0:4])[0]    
-    nextData = int(math.ceil((length) / 4.0) * 4) + 4   
+    length   = struct.unpack(">i", data[0:4])[0]
+    nextData = int(math.ceil((length) / 4.0) * 4) + 4
     return (data[4:length+4], data[nextData:])
 
 def readInt(data):
@@ -160,7 +160,7 @@ def readInt(data):
     else:
         integer = struct.unpack(">i", data[0:4])[0]
         rest    = data[4:]
-        
+
     return (integer, rest)
 
 def readLong(data):
@@ -194,18 +194,18 @@ def OSCBlob(next):
     else:
         tag    = ''
         binary = ''
-    
+
     return (tag, binary)
 
 def OSCArgument(next):
     """Convert some Python types to their
     OSC binary representations, returning a
     (typetag, data) tuple."""
-    
+
     if type(next) == type("") or type(next) == type(unicode()):
         if (type(next) == type(unicode())):
             next = str(next)
-        
+
         OSCstringLength = math.ceil((len(next)+1) / 4.0) * 4
         binary  = struct.pack(">%ds" % (OSCstringLength), next)
         tag = "s"
@@ -264,7 +264,7 @@ def decodeOSC(data):
         decoded.append(typetags)
         if(typetags[0] == ","):
             for tag in typetags[1:]:
-                value, rest = table[tag](rest)                
+                value, rest = table[tag](rest)
                 decoded.append(value)
         else:
             print "Oops, typetag lacks the magic ,"
@@ -353,7 +353,7 @@ if __name__ == "__main__":
     raw  = strings.getBinary()
 
     hexDump(raw)
-    
+
     print "Retrieving arguments..."
     data = raw
     for i in range(6):
@@ -374,7 +374,7 @@ if __name__ == "__main__":
     print decodeOSC(message.getBinary())
 
     print "Testing Blob types."
-   
+
     blob = OSCMessage()
     blob.append("","b")
     blob.append("b","b")
@@ -409,12 +409,12 @@ if __name__ == "__main__":
     print decodeOSC(bundlebinary)
 
     print "Testing the callback manager."
-    
+
     c = CallbackManager()
     c.add("/print", printingCallback)
-    
+
     c.handle(message.getBinary(), None)
-    
+
     c.handle(print1.getBinary(), None)
 
     print "sending a bundle to the callback manager"

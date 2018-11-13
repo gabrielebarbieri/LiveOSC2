@@ -15,28 +15,28 @@ class LO2TransportComponent(TransportComponent, LO2Mixin):
         self._on_signature_denominator_changed.subject = s
         self._on_tempo_changed.subject = s
         self._on_playing_changed.subject = s
-    
+
         self.add_default_callback('/live/tempo', s, 'tempo', float)
         self.add_default_callback('/live/time', s, 'current_song_time', float)
         self.add_default_callback('/live/overdub', s, 'overdub', int)
         self.add_default_callback('/live/metronome', s, 'metronome', int)
-    
+
         self.add_function_callback('/live/cue/next', s.jump_to_next_cue)
         self.add_function_callback('/live/cue/prev', s.jump_to_prev_cue)
         self.add_callback('/live/cue', self._cue)
         self.add_callback('/live/cue/jump', self._cue_jump)
 
         self.add_callback('/live/jump', self._jump)
-        
+
         self.add_function_callback('/live/play', s.start_playing)
         self.add_function_callback('/live/play/continue', s.continue_playing)
         self.add_function_callback('/live/play/selection', s.play_selection)
         self.add_function_callback('/live/stop', s.stop_playing)
-    
+
         self.add_function_callback('/live/undo', s.undo)
         self.add_function_callback('/live/redo', s.redo)
-    
-        
+
+
         self.add_callback('/live/track/create', self._add_track);
         self.add_callback('/live/return/create', self._add_return_track);
         self.add_callback('/live/scene/create', self._add_scene);
@@ -46,8 +46,8 @@ class LO2TransportComponent(TransportComponent, LO2Mixin):
         self.add_callback('/live/return/delete', self._del_return_track);
         self.add_callback('/live/scene/delete', self._del_scene);
         self.add_callback('/live/clip/delete', self._del_clip);
-    
-    
+
+
     # Callbacks
     @subject_slot('metronome')
     def _on_metronome_changed(self):
@@ -65,7 +65,7 @@ class LO2TransportComponent(TransportComponent, LO2Mixin):
     def _on_signature_changed(self):
         self.send('/live/signature', self.song().signature_numerator, self.song().signature_denominator)
 
-                  
+
     @subject_slot('tempo')
     def _on_tempo_changed(self):
         self.send('/live/tempo', self.song().tempo)
@@ -95,7 +95,7 @@ class LO2TransportComponent(TransportComponent, LO2Mixin):
     def _add_scene(self, msg, src):
         self.song().create_scene(msg[2] if len(msg) == 3 else 0)
 
-    
+
     def _del_track(self, msg, src):
         if len(msg) == 3:
             self.song().delete_track(msg[2])

@@ -15,18 +15,18 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
                     fn(self, *a, **kw)
 
         return wrap
-    
-    
+
+
     @wrap_init
     def __init__(self, tid, sid, *a, **k):
         self._track_id = tid
         self._scene_id = sid
         self._has_clip = 0
-        
+
         super(LO2ClipSlotComponent, self).__init__(*a, **k)
-    
+
         self.set_default('_track_id', '_scene_id')
-    
+
         callbacks = {
             'color': 'color',
             'name': 'name',
@@ -42,7 +42,7 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
 
         for n,p in callbacks.iteritems():
             self.add_simple_callback('/live/clip/'+n, '_clip_slot.clip', p, self._is_clip, getattr(self, '_on_clip_'+n+'_changed'))
-    
+
         self.add_callback('/live/clip/play', self._fire)
         self.add_callback('/live/clip/stop', self._stop)
         self.add_callback('/live/clip/pitch', self._pitch)
@@ -55,7 +55,7 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
 
     def _lo2__update_clip_property_slots(self):
         clip = self._clip_slot.clip if self._clip_slot else None
-        
+
         self._on_clip_name_changed.subject = clip
         self._on_clip_warping_changed.subject = clip
         self._on_clip_looping_changed.subject = clip
@@ -66,8 +66,8 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
         self._on_clip_end_changed.subject = clip
         self._on_clip_gain_changed.subject = clip
         self._on_clip_muted_changed.subject = clip
-    
-    
+
+
     def _is_clip(self, msg):
         if len(msg) >= 4:
             return msg[2] == self._track_id and msg[3] == self._scene_id
@@ -77,7 +77,7 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
     @property
     def id(self):
         return (self._track_id, self._scene_id)
-    
+
     def _get_name(self):
         if self._clip_slot is not None:
             if self._clip_slot.has_clip:
@@ -92,10 +92,10 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
         if self._clip_slot is not None:
             if self._clip_slot.has_clip:
                 self._clip_slot.clip.name = name
-    
+
     clip_name = property(_get_name, _set_name)
-    
-    
+
+
     def _get_color(self):
         if self._clip_slot is not None:
             if self._clip_slot.has_clip:
@@ -108,18 +108,18 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
     #@with_clip
     def _set_color(self, color):
             self._clip_slot.clip.name = color
-    
+
     color = property(_get_color, _set_color)
 
-    
-    
+
+
     # Listeners
     def _lo2__on_clip_state_changed(self):
         self._send_state()
-    
+
     def _lo2__on_clip_playing_state_changed(self):
         self._send_state()
-    
+
     def _send_state(self):
         if self._scene_id == -1:
             return
@@ -129,7 +129,7 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
 
         if self._clip_slot.has_clip:
             name = self._clip_slot.clip.name
-        
+
         self.send('/live/clip/state', self._track_id, self._scene_id, state)
 
         if self._clip_slot.has_clip != self._has_clip:
@@ -148,12 +148,12 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
                 state = 3
 
         return state
-    
-    
+
+
     def _lo2__on_clip_color_changed(self):
         self.send_default('/live/clip/color', self._clip_slot.clip.color)
-    
-    
+
+
     @subject_slot('name')
     def _on_clip_name_changed(self):
         self.send_default('/live/clip/name', self._clip_slot.clip.name)
@@ -194,7 +194,7 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
     @subject_slot('muted')
     def _on_clip_muted_changed(self):
         self.send_default('/live/clip/muted', self._clip_slot.clip.muted)
-    
+
 
 
     # Callbacks
@@ -229,7 +229,7 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
             tr = self._clip_slot.canonical_parent
             self.song().view.detail_clip = self._clip_slot.clip
             self.application().view.show_view('Detail/Clip')
-            
+
             if 0:
                 self.song().view.selected_track = self._clip_slot.canonical_parent
                 self.song().view.selected_scene = self.song().scenes[self._scene_id]
