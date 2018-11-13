@@ -170,6 +170,10 @@ Tracks
     Sets the Monitor status  
     in = 0, auto = 1, off = 2  
 
+
+/live/track/routing (int track_id, int routing_type, int routing_channel)  
+    Sets the routing Type and Channel.
+
 collapse
 
 routing

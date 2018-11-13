@@ -40,6 +40,7 @@ class LO2ChannelStripComponent(ChannelStripComponent, LO2Mixin):
                     
         self.add_callback('/live/track/send', self._track_sends_update)
         self.add_callback('/live/track/monitoring', self._track_monitoring)
+        self.add_callback('/live/track/routing', self._track_routing)
         self.add_callback('/live/track/state', self._track_state)
         
         for ty in self._track_types:
@@ -257,6 +258,17 @@ class LO2ChannelStripComponent(ChannelStripComponent, LO2Mixin):
     def _track_monitoring(self, msg, src):
         path, type_tag, track_id, value = msg
         self.song().visible_tracks[track_id].current_monitoring_state = value
+
+    def _track_routing(self, msg, src):
+        if len(msg) == 5:
+            path, type_tag, track_id, r_type, r_channel = msg
+            track = self.song().visible_tracks[track_id]
+
+            routing_type = track.available_input_routing_types[r_type]
+            routing_channel = track.available_input_routing_channels[r_channel]
+            setattr(track, 'current_input_routing', routing_type.display_name)
+            setattr(track, 'current_input_sub_routing', routing_channel.display_name)
+
 
     def _view(self, msg, src):
         if self._is_track(msg) and self._track is not None:
