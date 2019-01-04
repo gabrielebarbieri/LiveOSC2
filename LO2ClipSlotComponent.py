@@ -50,6 +50,7 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
         self.add_callback('/live/clip/notes', self._notes)
         self.add_callback('/live/clip/notes/add', self._notes_add)
         self.add_callback('/live/clip/notes/remove', self._notes_remove)
+        self.add_callback('/live/clip/notes/set', self._notes_set)
 
 
 
@@ -250,6 +251,25 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
                         data.append(p)
                 self.send('/live/clip/notes', data)
 
+    def _notes_set(self, msg, src):
+        if self._is_clip(msg):
+            c = self._clip_slot.clip
+
+            # todo refactor these method to avoid code duplication
+            if c.is_midi_clip and len(msg) >= 9:
+                param_count = len(msg) - 4
+                if param_count % 5 != 0:
+                    return # bad param count/format
+
+                note_count = param_count / 5
+                notes_to_add = []
+                for x in range(note_count):
+                    notes_to_add.append(
+                        (msg[x * 5 + 4], msg[x * 5 + 5], msg[x * 5 + 6], msg[x * 5 + 7], msg[x * 5 + 8])
+                    )
+
+                c.select_all_notes()
+                c.replace_selected_notes(tuple(notes_to_add))
 
     def _notes_add(self, msg, src):
         if self._is_clip(msg):
@@ -269,11 +289,16 @@ class LO2ClipSlotComponent(ClipSlotComponent, LO2Mixin):
 
                 c.set_notes(tuple(notes_to_add))
 
-
     def _notes_remove(self, msg, src):
         if self._is_clip(msg):
             c = self._clip_slot.clip
             if c.is_midi_clip and len(msg) == 8:
+                c.remove_notes(msg[4], msg[5], msg[6], msg[7])
+
+    def _notes_remove_all(self, msg, src):
+        if self._is_clip(msg):
+            c = self._clip_slot.clip
+            if c.is_midi_clip:
                 c.remove_notes(msg[4], msg[5], msg[6], msg[7])
 
 
