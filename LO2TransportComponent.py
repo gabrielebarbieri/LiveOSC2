@@ -128,7 +128,7 @@ class LO2TransportComponent(TransportComponent, LO2Mixin):
                 if msg[3] < len(self.song().scenes):
                     c = tr.clip_slots[msg[3]]
                     if c.has_clip:
-                        c.delete_clip(msg[4])
+                        c.delete_clip()
 
     def _cue(self, msg, src):
         data = []
